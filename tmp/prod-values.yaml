@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-store-service
+  labels:
+    app: app-store
+    environment: production
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: app-store
+    environment: production
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-store-deployment
+  labels:
+    app: app-store
+    environment: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-store
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: app-store
+        environment: production
+    spec:
+      containers:
+        - name: app-store-container
+          image: app-store:latest
+          ports:
+            - containerPort: 8080
