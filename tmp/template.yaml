@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.ServiceName}}-service
+  labels:
+    app: {{.ServiceName}}
+    environment: {{.Environment}}
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: {{.ServiceName}}
+    environment: {{.Environment}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.ServiceName}}-deployment
+  labels:
+    app: {{.ServiceName}}
+    environment: {{.Environment}}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: {{.ServiceName}}
+      environment: {{.Environment}}
+  template:
+    metadata:
+      labels:
+        app: {{.ServiceName}}
+        environment: {{.Environment}}
+    spec:
+      containers:
+        - name: {{.ServiceName}}-container
+          image: {{.ServiceName}}:latest
+          ports:
+            - containerPort: 8080
